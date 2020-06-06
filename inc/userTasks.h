@@ -29,6 +29,7 @@ extern "C" {
 /*=====[Public function-like macros]=========================================*/
 
 /*=====[Definitions of public data types]====================================*/
+extern rtc_t rtc;
 extern SemaphoreHandle_t SEM1;
 extern SemaphoreHandle_t SEM2;
 /*=====[Prototypes (declarations) of public functions]=======================*/

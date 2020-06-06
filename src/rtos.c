@@ -20,7 +20,7 @@
 #include "userTasks.h"
 #include "sapi_print.h"
 #include "supporting_functions.h"
-
+#include "sapi_rtc.h"
 
 
 /*=====[Definition macros of private constants]==============================*/
@@ -28,7 +28,7 @@
 /*=====[Definitions of extern global variables]==============================*/
 
 /*=====[Definitions of public global variables]==============================*/
-
+rtc_t rtc;
 /*=====[Definitions of private global variables]=============================*/
 
 /*=====[Main function, program entry point after power on or reset]==========*/
@@ -97,19 +97,22 @@ int main( void )
 	   SEM2=xSemaphoreCreateBinary();
 
 	   boardInit();
-	   /* Inicializar la UART_USB junto con las interrupciones de Tx y Rx */
-	   uartConfig(UART_USB, 9600);
-	   // Seteo un callback al evento de recepcion y habilito su interrupcion
-	   uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);
-	   // Habilito todas las interrupciones de UART_USB
-	   uartInterrupt(UART_USB, true);
 
-	   /* Inicializar la UART_USB junto con las interrupciones de Tx y Rx */
-	   uartConfig(UART_232, 9600);
-	   // Seteo un callback al evento de recepcion y habilito su interrupcion
-	   uartCallbackSet(UART_232, UART_RECEIVE, onRxBt, NULL);
-	   // Habilito todas las interrupciones de UART_USB
-	   uartInterrupt(UART_232, true);
+
+
+
+	   uartConfig(UART_USB, 9600);/* Inicializar la UART_USB junto con las interrupciones de Tx y Rx */
+
+	   uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);// Seteo un callback al evento de recepcion y habilito su interrupcion
+
+	   uartInterrupt(UART_USB, true);// Habilito todas las interrupciones de UART_USB
+
+
+	   uartConfig(UART_232, 9600);/* Inicializar la UART_232 junto con las interrupciones de Tx y Rx */
+
+	   uartCallbackSet(UART_232, UART_RECEIVE, onRxBt, NULL);// Seteo un callback al evento de recepcion y habilito su interrupcion
+
+	   uartInterrupt(UART_232, true);// Habilito todas las interrupciones de UART_232
 
 
    // Create a task in freeRTOS with dynamic memory
@@ -131,10 +134,10 @@ int main( void )
 	   );
 	   BaseType_t tarea2  =xTaskCreate(
 			   myTask2,                     // Function that implements the task.
-			   (const char *)"Aburdrir",     // Text name for the task.
+			   (const char *)"MOSTRAR HORA",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
    if(tarea1 == pdFAIL)
@@ -155,7 +158,7 @@ int main( void )
    }
 
    vTaskStartScheduler(); // Initialize scheduler
-
+   rtcInit();// Inicializar RTC
    while( true )
 	   // If reach heare it means that the scheduler could not start
    {

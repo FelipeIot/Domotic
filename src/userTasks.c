@@ -67,6 +67,11 @@ void myTask2( void* taskParmPtr )
     while( TRUE )
     {
         gpioWrite( LEDB ,1 );
+
+        taskENTER_CRITICAL();
+        rtcRead( &rtc );
+        printf("%02d/%02d/%04d, %02d:%02d:%02d\r\n",rtc.mday, rtc.month, rtc.year,rtc.hour, rtc.min, rtc.sec );
+        taskEXIT_CRITICAL();
         vTaskDelay( 500 / portTICK_RATE_MS );
         gpioWrite( LEDB ,0 );
         //xSemaphoreGive(SEM1);
