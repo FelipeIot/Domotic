@@ -8,16 +8,16 @@
 
 /*=====[Avoid multiple inclusion - begin]====================================*/
 
-#ifndef __USER_TASKS_H__
-#define __USER_TASKS_H__
+#ifndef __TIRALED_H__
+#define __TIRALED_H__
 
 /*=====[Inclusions of public function dependencies]==========================*/
 
+#include <stdint.h>
+#include <stddef.h>
 #include "FreeRTOS.h"
-#include "task.h"
-#include "sapi.h"
 
-#include "semphr.h"
+
 /*=====[C++ - begin]=========================================================*/
 
 #ifdef __cplusplus
@@ -25,21 +25,26 @@ extern "C" {
 #endif
 
 /*=====[Definition macros of public constants]===============================*/
+typedef struct {
 
+   uint8_t  red; /* 0 to 7   */
+   uint8_t  green;	 /* 0 to 7   */
+   uint8_t  blue;	 /* 0 to 7    */
+
+} rgb_t;
 /*=====[Public function-like macros]=========================================*/
 
+
+
 /*=====[Definitions of public data types]====================================*/
-extern SemaphoreHandle_t SEM1;
-extern SemaphoreHandle_t SEM2;
-extern SemaphoreHandle_t SEMTONEMARIO;
-extern SemaphoreHandle_t SEMLED;
+extern rgb_t tira;
+extern uint8_t redcorrection[8];
+extern uint8_t greencorrection[8];
+extern uint8_t bluecorrection[8];
+extern void tiraled_init(void);
 /*=====[Prototypes (declarations) of public functions]=======================*/
 
-void ledOn( void* taskParmPtr );  // Task declaration
-void ledOff( void* taskParmPtr );  // Task declaration
-void myTask2( void* taskParmPtr );  // Task declaration
-void playMarioSound( void* taskParmPtr );
-void manejoDeLed( void* taskParmPtr );
+
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 
 /*=====[C++ - end]===========================================================*/
@@ -50,4 +55,4 @@ void manejoDeLed( void* taskParmPtr );
 
 /*=====[Avoid multiple inclusion - end]======================================*/
 
-#endif /* __USER_TASKS_H__ */
+#endif /* __RTOS_H__ */

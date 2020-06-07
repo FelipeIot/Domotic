@@ -21,6 +21,9 @@
 #include "sapi_print.h"
 #include "supporting_functions.h"
 #include "rtcLayer.h"
+#include "tiraled.h"
+
+
 
 
 /*=====[Definition macros of private constants]==============================*/
@@ -36,6 +39,8 @@ rtclock_t rtc;
 SemaphoreHandle_t SEM1;
 SemaphoreHandle_t SEM2;
 SemaphoreHandle_t SEMTONEMARIO;
+SemaphoreHandle_t SEMLED;
+rgb_t tira;
 
 void onRxBt( void *noUsado )
 {
@@ -61,6 +66,14 @@ void onRxBt( void *noUsado )
 			{
 				xSemaphoreGiveFromISR(SEMTONEMARIO,&despiertoprima);
 			}
+			if(vec[1]=='L')
+			{
+				tira.blue=vec[2];
+				tira.green=vec[3];
+				tira.red=vec[4];
+				xSemaphoreGiveFromISR(SEMLED,&despiertoprima);
+			}
+
 		}
 		nRecepcion=0;
 	}
@@ -91,6 +104,13 @@ void onRx( void *noUsado )
 			{
 				xSemaphoreGiveFromISR(SEMTONEMARIO,&despierto);
 			}
+			if(vec[1]=='L')
+			{
+				tira.blue=vec[2];
+				tira.green=vec[3];
+				tira.red=vec[4];
+				xSemaphoreGiveFromISR(SEMLED,&despierto);
+			}
 		}
 		nRecepcion=0;
 	}
@@ -101,20 +121,18 @@ int main( void )
 {
 
 
-	   bool_t valor = 0;
-	   valor = pwmConfig( 0, PWM_ENABLE );
+
 	   SEM1=xSemaphoreCreateBinary();
 
 	   SEM2=xSemaphoreCreateBinary();
 
 	   SEMTONEMARIO=xSemaphoreCreateBinary();
 
+	   SEMLED=xSemaphoreCreateBinary();
+
 	   boardInit();
 
-	   gpioInit( GPIO6, GPIO_OUTPUT );
-
-	   valor = pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
-
+	   tiraled_init();
 
 	   uartConfig(UART_USB, 9600);/* Inicializar la UART_USB junto con las interrupciones de Tx y Rx */
 
@@ -136,7 +154,7 @@ int main( void )
 			   (const char *)"ENCENDER LUZ",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
 	   BaseType_t tarea3=xTaskCreate(
@@ -144,7 +162,7 @@ int main( void )
 			   (const char *)"APAGAR LUZ",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
 	   BaseType_t tarea2  =xTaskCreate(
@@ -152,7 +170,7 @@ int main( void )
 			   (const char *)"MOSTRAR HORA",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
 	   BaseType_t tarea4  =xTaskCreate(
@@ -161,6 +179,14 @@ int main( void )
 			   configMINIMAL_STACK_SIZE*8, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
 			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
+			   0                           // Pointer to the task created in the system
+	   );
+	   BaseType_t tarea5  =xTaskCreate(
+			   manejoDeLed,                     // Function that implements the task.
+			   (const char *)"MANEJO LEDS",     // Text name for the task.
+			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
+			   0,                          // Parameter passed into the task.
+			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
    if(tarea1 == pdFAIL)

@@ -14,6 +14,7 @@
 #include "rtcLayer.h"
 #include "soundMario.h"
 #include "sapi_sct.h"
+#include "tiraled.h"
 /*=====[Inclusions of private function dependencies]=========================*/
 
 /*=====[Definition macros of private constants]==============================*/
@@ -41,7 +42,7 @@ void ledOn( void* taskParmPtr )
     while( TRUE )
     {
     	xSemaphoreTake(SEM1,portMAX_DELAY);
-    	gpioWrite( LED1, ON );
+    	gpioWrite( LEDR, ON );
     }
 }
 void ledOff( void* taskParmPtr )
@@ -52,17 +53,13 @@ void ledOff( void* taskParmPtr )
     while( TRUE )
     {
     	xSemaphoreTake(SEM2,portMAX_DELAY);
-    	gpioWrite( LED1, OFF );
+    	gpioWrite( LEDR, OFF );
     }
 }
 
 
 void myTask2( void* taskParmPtr )
 {
-    //gpioWrite( LED1, ON );
-    //vTaskDelay( 1000 / portTICK_RATE_MS );	 					// Envia la tarea al estado bloqueado durante 1 s (delay)
-    //gpioWrite( LED1, OFF );
-
 
     TickType_t xPeriodicity =  1000 / portTICK_RATE_MS;		// Tarea periodica cada 1000 ms
 
@@ -79,14 +76,37 @@ void myTask2( void* taskParmPtr )
         taskEXIT_CRITICAL();
         vTaskDelay( 500 / portTICK_RATE_MS );
         gpioWrite( LEDB ,0 );
-        //xSemaphoreGive(SEM1);
-
-        //vPrintString("Hola me llamo ichigo \n" );
-
         // Envia la tarea al estado bloqueado durante xPeriodicity (delay periodico)
         vTaskDelayUntil( &xLastWakeTime , xPeriodicity );
     }
 }
+
+void manejoDeLed( void* taskParmPtr )
+{
+
+
+    // ---------- REPETIR POR SIEMPRE --------------------------
+    while( TRUE )
+    {
+    	xSemaphoreTake(SEMLED,portMAX_DELAY);
+    	if(tira.blue>7)
+    	{
+    		tira.blue=7;
+    	}
+    	if(tira.red>7)
+    	{
+    		tira.red=7;
+    	}
+    	if(tira.green>7)
+    	{
+    		tira.green=7;
+    	}
+ 	   pwmWrite( PWM7, redcorrection[tira.red]);
+ 	   pwmWrite( PWM8, bluecorrection[tira.blue]);
+ 	   pwmWrite( PWM9, greencorrection[tira.green] );
+    }
+}
+
 
 
 void playMarioSound( void* taskParmPtr )
@@ -101,6 +121,7 @@ void playMarioSound( void* taskParmPtr )
 
 
 
+
     procesartabla(&melody[0],&tempo[0],&frecuencia[0],&milis[0],78);
 
     // ---------- REPETIR POR SIEMPRE --------------------------
@@ -109,12 +130,13 @@ void playMarioSound( void* taskParmPtr )
     {
 
     xSemaphoreTake(SEMTONEMARIO,portMAX_DELAY);
-    pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
+    //pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
 
 		while(TRUE)
 		{
 
 			vTaskDelay( 1 / portTICK_RATE_MS );
+
 			contadorMilisegundos++;
 			variante = TRUE;
 			if(contadorMilisegundos>milis[indice])
@@ -142,7 +164,8 @@ void playMarioSound( void* taskParmPtr )
 		}
 
 		pwmWrite( PWM6, 0 );
-		pwmConfig( PWM6, PWM_DISABLE );
+		Sct_Init( 10000);
+
 
 
     }
