@@ -20,7 +20,7 @@
 #include "userTasks.h"
 #include "sapi_print.h"
 #include "supporting_functions.h"
-#include "sapi_rtc.h"
+#include "rtcLayer.h"
 
 
 /*=====[Definition macros of private constants]==============================*/
@@ -28,13 +28,14 @@
 /*=====[Definitions of extern global variables]==============================*/
 
 /*=====[Definitions of public global variables]==============================*/
-rtc_t rtc;
+rtclock_t rtc;
 /*=====[Definitions of private global variables]=============================*/
 
 /*=====[Main function, program entry point after power on or reset]==========*/
 
 SemaphoreHandle_t SEM1;
 SemaphoreHandle_t SEM2;
+SemaphoreHandle_t SEMTONEMARIO;
 
 void onRxBt( void *noUsado )
 {
@@ -55,6 +56,10 @@ void onRxBt( void *noUsado )
 			if(vec[1]=='B')
 			{
 				xSemaphoreGiveFromISR(SEM2,&despiertoprima);
+			}
+			if(vec[1]=='C')
+			{
+				xSemaphoreGiveFromISR(SEMTONEMARIO,&despiertoprima);
 			}
 		}
 		nRecepcion=0;
@@ -82,6 +87,10 @@ void onRx( void *noUsado )
 			{
 				xSemaphoreGiveFromISR(SEM2,&despierto);
 			}
+			if(vec[1]=='C')
+			{
+				xSemaphoreGiveFromISR(SEMTONEMARIO,&despierto);
+			}
 		}
 		nRecepcion=0;
 	}
@@ -92,13 +101,19 @@ int main( void )
 {
 
 
+	   bool_t valor = 0;
+	   valor = pwmConfig( 0, PWM_ENABLE );
 	   SEM1=xSemaphoreCreateBinary();
 
 	   SEM2=xSemaphoreCreateBinary();
 
+	   SEMTONEMARIO=xSemaphoreCreateBinary();
+
 	   boardInit();
 
+	   gpioInit( GPIO6, GPIO_OUTPUT );
 
+	   valor = pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
 
 
 	   uartConfig(UART_USB, 9600);/* Inicializar la UART_USB junto con las interrupciones de Tx y Rx */
@@ -140,6 +155,14 @@ int main( void )
 			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
+	   BaseType_t tarea4  =xTaskCreate(
+			   playMarioSound,                     // Function that implements the task.
+			   (const char *)"PLAY MARIO",     // Text name for the task.
+			   configMINIMAL_STACK_SIZE*8, // Stack size in words, not bytes.
+			   0,                          // Parameter passed into the task.
+			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
+			   0                           // Pointer to the task created in the system
+	   );
    if(tarea1 == pdFAIL)
    {
 	   printf("No se creo la tarea1");
@@ -156,9 +179,25 @@ int main( void )
    {
 	   printf(" Creo la tarea2");
    }
+   if(tarea3 == pdFAIL)
+   {
+	   printf("No se creo la tarea3");
+   }
+   else
+   {
+	   printf(" Creo la tarea3");
+   }
+   if(tarea4 == pdFAIL)
+   {
+	   printf("No se creo la tarea4");
+   }
+   else
+   {
+	   printf(" Creo la tarea4");
+   }
 
    vTaskStartScheduler(); // Initialize scheduler
-   rtcInit();// Inicializar RTC
+   rtc_config();// Inicializar RTC
    while( true )
 	   // If reach heare it means that the scheduler could not start
    {
