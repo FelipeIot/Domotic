@@ -42,7 +42,7 @@ void ledOn( void* taskParmPtr )
     while( TRUE )
     {
     	xSemaphoreTake(SEM1,portMAX_DELAY);
-    	gpioWrite( LEDR, ON );
+    	gpioWrite( T_FIL2, ON );
     }
 }
 void ledOff( void* taskParmPtr )
@@ -53,7 +53,7 @@ void ledOff( void* taskParmPtr )
     while( TRUE )
     {
     	xSemaphoreTake(SEM2,portMAX_DELAY);
-    	gpioWrite( LEDR, OFF );
+    	gpioWrite( T_FIL2, OFF );
     }
 }
 
@@ -101,9 +101,9 @@ void manejoDeLed( void* taskParmPtr )
     	{
     		tira.green=7;
     	}
- 	   pwmWrite( PWM7, redcorrection[tira.red]);
- 	   pwmWrite( PWM8, bluecorrection[tira.blue]);
- 	   pwmWrite( PWM9, greencorrection[tira.green] );
+ 	   pwmWrite( PWM0, redcorrection[tira.red]);
+ 	   pwmWrite( PWM1, bluecorrection[tira.blue]);
+ 	   pwmWrite( PWM2, greencorrection[tira.green] );
     }
 }
 

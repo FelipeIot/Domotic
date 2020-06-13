@@ -133,6 +133,7 @@ int main( void )
 	   boardInit();
 
 	   tiraled_init();
+	   gpioInit( T_FIL2, GPIO_OUTPUT );
 
 	   uartConfig(UART_USB, 9600);/* Inicializar la UART_USB junto con las interrupciones de Tx y Rx */
 
@@ -154,7 +155,7 @@ int main( void )
 			   (const char *)"ENCENDER LUZ",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
 	   BaseType_t tarea3=xTaskCreate(
@@ -162,7 +163,7 @@ int main( void )
 			   (const char *)"APAGAR LUZ",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+2,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
 	   BaseType_t tarea2  =xTaskCreate(
@@ -170,7 +171,7 @@ int main( void )
 			   (const char *)"MOSTRAR HORA",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+4,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
 	   BaseType_t tarea4  =xTaskCreate(
@@ -186,7 +187,7 @@ int main( void )
 			   (const char *)"MANEJO LEDS",     // Text name for the task.
 			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
-			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
+			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
    if(tarea1 == pdFAIL)
@@ -227,7 +228,7 @@ int main( void )
    while( true )
 	   // If reach heare it means that the scheduler could not start
    {
-	   //uartTxWrite(UART_USB,2);
+
    }
 
    // YOU NEVER REACH HERE, because this program runs directly or on a
