@@ -9,10 +9,11 @@
 /*=====[Inclusion of own header]=============================================*/
 
 #include "userTasks.h"
+
+#include "sound.h"
  #include "supporting_functions.h"
 #include "sapi.h"
 #include "rtcLayer.h"
-#include "soundMario.h"
 #include "sapi_sct.h"
 #include "tiraled.h"
 /*=====[Inclusions of private function dependencies]=========================*/
@@ -56,8 +57,6 @@ void ledOff( void* taskParmPtr )
     	gpioWrite( T_FIL2, OFF );
     }
 }
-
-
 void myTask2( void* taskParmPtr )
 {
 
@@ -84,11 +83,11 @@ void myTask2( void* taskParmPtr )
 void manejoDeLed( void* taskParmPtr )
 {
 
-
+	TickType_t periodo =  200/ portTICK_RATE_MS;
     // ---------- REPETIR POR SIEMPRE --------------------------
     while( TRUE )
     {
-    	xSemaphoreTake(SEMLED,portMAX_DELAY);
+    	xSemaphoreTake(SEMLED,periodo);
     	if(tira.blue>7)
     	{
     		tira.blue=7;
@@ -107,8 +106,6 @@ void manejoDeLed( void* taskParmPtr )
     }
 }
 
-
-
 void playMarioSound( void* taskParmPtr )
 {
 
@@ -122,7 +119,7 @@ void playMarioSound( void* taskParmPtr )
 
 
 
-    procesartabla(&melody[0],&tempo[0],&frecuencia[0],&milis[0],78);
+    procesartabla(&melody[0],&tempo[0],&frecuencia[0],&milis[0],78,1100);
 
     // ---------- REPETIR POR SIEMPRE --------------------------
     indice=0;
@@ -172,6 +169,106 @@ void playMarioSound( void* taskParmPtr )
 
 }
 
+void playMemeSound( void* taskParmPtr )
+{
+
+    //TickType_t periodo =  1/ portTICK_RATE_MS;		// Tarea periodica cada 1000 ms
+
+    //TickType_t xLastWakeTime = xTaskGetTickCount();
+    static uint16_t contadorMilisegundos=0;
+    static uint16_t indice;
+    static bool_t variante=TRUE;
+
+
+
+
+    procesartabla(&melodyMeme[0],&tempoMeme[0],&frecuenciaMeme[0],&milisMeme[0],136,800);
+
+    // ---------- REPETIR POR SIEMPRE --------------------------
+    indice=0;
+    while(TRUE)
+    {
+
+    xSemaphoreTake(SEMTONEMEME,portMAX_DELAY);
+    //pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
+
+		while(TRUE)
+		{
+
+			vTaskDelay( 1 / portTICK_RATE_MS );
+
+			contadorMilisegundos++;
+			variante = TRUE;
+			if(contadorMilisegundos>milisMeme[indice])
+			{
+				contadorMilisegundos=0;
+				indice++;
+				if(indice>271)
+				{
+					indice=0;
+					break;
+				}
+				   Sct_Init( frecuenciaMeme[indice]);
+				   if(variante)
+				   {
+					   pwmWrite( PWM6, 127 );
+					   variante = FALSE;
+				   }
+				   else
+				   {
+					   pwmWrite( PWM6, 0 );
+					   variante = TRUE;
+				   }
+			}
+
+		}
+
+		pwmWrite( PWM6, 0 );
+		Sct_Init( 10000);
+
+
+
+    }
+
+}
+
+void cortinaOpen( void* taskParmPtr )
+{
+
+
+    // ---------- REPETIR POR SIEMPRE --------------------------
+    while( TRUE )
+    {
+    	xSemaphoreTake(SEMCORTINAOPEN,portMAX_DELAY);
+    	gpioWrite( LED1, ON );
+    }
+}
+void cortinaClose( void* taskParmPtr )
+{
+
+
+    // ---------- REPETIR POR SIEMPRE --------------------------
+    while( TRUE )
+    {
+    	xSemaphoreTake(SEMCORTINACLOSE,portMAX_DELAY);
+    	gpioWrite( LED1, OFF );
+    }
+}
+
+void alarma( void* taskParmPtr )
+{
+
+	 TickType_t periodo =  30000 / portTICK_RATE_MS;	//cada 30 segundos
+    // ---------- REPETIR POR SIEMPRE --------------------------
+    while( TRUE )
+    {
+    	xSemaphoreTake(SEMDESPERTADOR,periodo);
+    	if((despertador.hour==rtc.hour)&&(despertador.min==rtc.min))
+    	{
+    		xSemaphoreGive(SEMTONEMARIO);
+    	}
+    }
+}
 /*=====[Implementations of interrupt functions]==============================*/
 
 /*=====[Implementations of private functions]================================*/

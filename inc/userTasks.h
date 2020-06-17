@@ -32,14 +32,23 @@ extern "C" {
 extern SemaphoreHandle_t SEM1;
 extern SemaphoreHandle_t SEM2;
 extern SemaphoreHandle_t SEMTONEMARIO;
+extern SemaphoreHandle_t SEMTONEMEME;
 extern SemaphoreHandle_t SEMLED;
+extern SemaphoreHandle_t SEMCORTINAOPEN;
+extern SemaphoreHandle_t SEMCORTINACLOSE;
+extern SemaphoreHandle_t SEMDESPERTADOR;
 /*=====[Prototypes (declarations) of public functions]=======================*/
-
+void alarma( void* taskParmPtr );
 void ledOn( void* taskParmPtr );  // Task declaration
 void ledOff( void* taskParmPtr );  // Task declaration
 void myTask2( void* taskParmPtr );  // Task declaration
 void playMarioSound( void* taskParmPtr );
+void playMemeSound( void* taskParmPtr );
 void manejoDeLed( void* taskParmPtr );
+void cortinaOpen( void* taskParmPtr );
+void cortinaClose( void* taskParmPtr );
+
+
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 
 /*=====[C++ - end]===========================================================*/

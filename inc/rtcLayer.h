@@ -34,10 +34,18 @@ typedef struct {
    uint8_t  min;	 /* 0 to 59   */
    uint8_t  sec;	 /* 0 to 59   */
 } rtclock_t;
+
+typedef struct {
+   uint8_t  hour;	 /* 0 to 23   */
+   uint8_t  min;	 /* 0 to 59   */
+} alarma_t;
+
+
 /*=====[Public function-like macros]=========================================*/
 
 /*=====[Definitions of public data types]====================================*/
 extern rtclock_t rtc;
+extern alarma_t despertador;
 extern void rct_leer(rtclock_t *real);
 /*=====[Prototypes (declarations) of public functions]=======================*/
 extern void rtc_config(void);

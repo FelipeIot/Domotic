@@ -8,8 +8,8 @@
 
 /*=====[Avoid multiple inclusion - begin]====================================*/
 
-#ifndef __SOUNDMARIO_H__
-#define __SOUNDMARIO_H__
+#ifndef __SOUND_H__
+#define __SOUND_H__
 
 /*=====[Inclusions of public function dependencies]==========================*/
 
@@ -118,11 +118,32 @@ extern "C" {
 /*=====[Definitions of public data types]====================================*/
 extern uint32_t melody[78];
 extern uint16_t tempo[78];
+
+extern uint32_t melodyHappy[25];
+extern uint16_t tempoHappy[25];
+
+extern uint32_t melodyNav[26];
+extern uint16_t tempoNav[26];
+
+
+extern uint32_t melodyMeme[136];
+extern uint16_t tempoMeme[136];
+
+
+
 extern uint32_t frecuencia[156];
 extern uint16_t milis[156];
 
+extern uint32_t frecuenciaHappy[50];
+extern uint16_t milisHappy[50];
+
+extern uint32_t frecuenciaNav[52];
+extern uint16_t milisNav[52];
+
+extern uint32_t frecuenciaMeme[272];
+extern uint16_t milisMeme[272];
 /*=====[Prototypes (declarations) of public functions]=======================*/
-extern void procesartabla(uint32_t *mel,uint16_t *tem,uint32_t *melsal,uint16_t *temsal,uint16_t longitud);
+extern void procesartabla(uint32_t *mel,uint16_t *tem,uint32_t *melsal,uint16_t *temsal,uint16_t longitud,uint16_t velocidad);
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 
 /*=====[C++ - end]===========================================================*/

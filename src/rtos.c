@@ -39,8 +39,14 @@ rtclock_t rtc;
 SemaphoreHandle_t SEM1;
 SemaphoreHandle_t SEM2;
 SemaphoreHandle_t SEMTONEMARIO;
+SemaphoreHandle_t SEMTONEMEME;
 SemaphoreHandle_t SEMLED;
+SemaphoreHandle_t SEMCORTINAOPEN;
+SemaphoreHandle_t SEMCORTINACLOSE;
+SemaphoreHandle_t SEMDESPERTADOR;
+
 rgb_t tira;
+alarma_t despertador;
 
 void onRxBt( void *noUsado )
 {
@@ -65,6 +71,26 @@ void onRxBt( void *noUsado )
 			if(vec[1]=='C')
 			{
 				xSemaphoreGiveFromISR(SEMTONEMARIO,&despiertoprima);
+			}
+			if(vec[1]=='D')
+			{
+				xSemaphoreGiveFromISR(SEMTONEMEME,&despiertoprima);
+			}
+			if(vec[1]=='E')
+			{
+				xSemaphoreGiveFromISR(SEMCORTINAOPEN,&despiertoprima);
+			}
+			if(vec[1]=='F')
+			{
+				xSemaphoreGiveFromISR(SEMCORTINACLOSE,&despiertoprima);
+			}
+			if(vec[1]=='Z')
+			{
+
+				despertador.hour=vec[2];
+				despertador.min=vec[3];
+				xSemaphoreGiveFromISR(SEMDESPERTADOR,&despiertoprima);
+
 			}
 			if(vec[1]=='L')
 			{
@@ -104,6 +130,26 @@ void onRx( void *noUsado )
 			{
 				xSemaphoreGiveFromISR(SEMTONEMARIO,&despierto);
 			}
+			if(vec[1]=='D')
+			{
+				xSemaphoreGiveFromISR(SEMTONEMEME,&despierto);
+			}
+			if(vec[1]=='E')
+			{
+				xSemaphoreGiveFromISR(SEMCORTINAOPEN,&despierto);
+			}
+			if(vec[1]=='F')
+			{
+				xSemaphoreGiveFromISR(SEMCORTINACLOSE,&despierto);
+			}
+			if(vec[1]=='Z')
+			{
+
+				despertador.hour=vec[2];
+				despertador.min=vec[3];
+				xSemaphoreGiveFromISR(SEMDESPERTADOR,&despierto);
+
+			}
 			if(vec[1]=='L')
 			{
 				tira.blue=vec[2];
@@ -128,7 +174,15 @@ int main( void )
 
 	   SEMTONEMARIO=xSemaphoreCreateBinary();
 
+	   SEMTONEMEME=xSemaphoreCreateBinary();
+
 	   SEMLED=xSemaphoreCreateBinary();
+
+	   SEMCORTINAOPEN=xSemaphoreCreateBinary();
+
+	   SEMCORTINACLOSE=xSemaphoreCreateBinary();
+
+	   SEMDESPERTADOR=xSemaphoreCreateBinary();
 
 	   boardInit();
 
@@ -150,10 +204,10 @@ int main( void )
 
 
    // Create a task in freeRTOS with dynamic memory
-	   BaseType_t tarea1=xTaskCreate(
+	  BaseType_t tarea1=xTaskCreate(
 			   ledOn,                     // Function that implements the task.
 			   (const char *)"ENCENDER LUZ",     // Text name for the task.
-			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
+			   configMINIMAL_STACK_SIZE*1, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
 			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
@@ -161,7 +215,7 @@ int main( void )
 	   BaseType_t tarea3=xTaskCreate(
 			   ledOff,                     // Function that implements the task.
 			   (const char *)"APAGAR LUZ",     // Text name for the task.
-			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
+			   configMINIMAL_STACK_SIZE*1, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
 			   tskIDLE_PRIORITY+1,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
@@ -177,7 +231,7 @@ int main( void )
 	   BaseType_t tarea4  =xTaskCreate(
 			   playMarioSound,                     // Function that implements the task.
 			   (const char *)"PLAY MARIO",     // Text name for the task.
-			   configMINIMAL_STACK_SIZE*8, // Stack size in words, not bytes.
+			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
 			   0,                          // Parameter passed into the task.
 			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
@@ -190,6 +244,40 @@ int main( void )
 			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
 			   0                           // Pointer to the task created in the system
 	   );
+
+	   BaseType_t tarea6  =xTaskCreate(
+			   playMemeSound,                     // Function that implements the task.
+			   (const char *)"PLAY MEME",     // Text name for the task.
+			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
+			   0,                          // Parameter passed into the task.
+			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
+			   0                           // Pointer to the task created in the system
+	   );
+	   BaseType_t tarea7  =xTaskCreate(
+			   cortinaOpen,                     // Function that implements the task.
+			   (const char *)"Abrir cortina",     // Text name for the task.
+			   configMINIMAL_STACK_SIZE*1, // Stack size in words, not bytes.
+			   0,                          // Parameter passed into the task.
+			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
+			   0                           // Pointer to the task created in the system
+	   );
+	   BaseType_t tarea8  =xTaskCreate(
+			   cortinaClose,                     // Function that implements the task.
+			   (const char *)"Cerrar cortina",     // Text name for the task.
+			   configMINIMAL_STACK_SIZE*1, // Stack size in words, not bytes.
+			   0,                          // Parameter passed into the task.
+			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
+			   0                           // Pointer to the task created in the system
+	   );
+	   BaseType_t tarea9  =xTaskCreate(
+			   alarma,                     // Function that implements the task.
+			   (const char *)"desp",     // Text name for the task.
+			   configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
+			   0,                          // Parameter passed into the task.
+			   tskIDLE_PRIORITY+5,         // Priority at which the task is created.
+			   0                           // Pointer to the task created in the system
+	   );
+
    if(tarea1 == pdFAIL)
    {
 	   printf("No se creo la tarea1");
@@ -222,6 +310,47 @@ int main( void )
    {
 	   printf(" Creo la tarea4");
    }
+   if(tarea5 == pdFAIL)
+   {
+	   printf("No se creo la tarea5");
+   }
+   else
+   {
+	   printf(" Creo la tarea5");
+   }
+   if(tarea6 == pdFAIL)
+   {
+	   printf("No se creo la tarea6");
+   }
+   else
+   {
+	   printf(" Creo la tarea6");
+   }
+   if(tarea7 == pdFAIL)
+   {
+	   printf("No se creo la tarea7");
+   }
+   else
+   {
+	   printf(" Creo la tarea7");
+   }
+   if(tarea8 == pdFAIL)
+   {
+	   printf("No se creo la tarea8");
+   }
+   else
+   {
+	   printf(" Creo la tarea8");
+   }
+   if(tarea9 == pdFAIL)
+   {
+	   printf("No se creo la tarea8");
+   }
+   else
+   {
+	   printf(" Creo la tarea8");
+   }
+
 
    vTaskStartScheduler(); // Initialize scheduler
    rtc_config();// Inicializar RTC
