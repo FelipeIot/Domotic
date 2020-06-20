@@ -43,7 +43,7 @@ void ledOn( void* taskParmPtr )
     while( TRUE )
     {
     	xSemaphoreTake(SEM1,portMAX_DELAY);
-    	gpioWrite( T_FIL2, ON );
+    	gpioWrite( T_FIL2, ON );//encender foco
     }
 }
 void ledOff( void* taskParmPtr )
@@ -54,7 +54,7 @@ void ledOff( void* taskParmPtr )
     while( TRUE )
     {
     	xSemaphoreTake(SEM2,portMAX_DELAY);
-    	gpioWrite( T_FIL2, OFF );
+    	gpioWrite( T_FIL2, OFF );//apagar foco
     }
 }
 void myTask2( void* taskParmPtr )
@@ -71,16 +71,15 @@ void myTask2( void* taskParmPtr )
 
         taskENTER_CRITICAL();
         rct_leer( &rtc );
-        printf("%02d/%02d/%04d, %02d:%02d:%02d\r\n",rtc.mday, rtc.month, rtc.year,rtc.hour, rtc.min, rtc.sec );
+        printf("%02d/%02d/%04d, %02d:%02d:%02d\r\n",rtc.mday, rtc.month, rtc.year,rtc.hour, rtc.min, rtc.sec );//imprimir time
         taskEXIT_CRITICAL();
         vTaskDelay( 500 / portTICK_RATE_MS );
         gpioWrite( LEDB ,0 );
-        // Envia la tarea al estado bloqueado durante xPeriodicity (delay periodico)
         vTaskDelayUntil( &xLastWakeTime , xPeriodicity );
     }
 }
 
-void manejoDeLed( void* taskParmPtr )
+void manejoDeLed( void* taskParmPtr )//actualiza tira led
 {
 
 	TickType_t periodo =  200/ portTICK_RATE_MS;
@@ -106,12 +105,12 @@ void manejoDeLed( void* taskParmPtr )
     }
 }
 
-void playMarioSound( void* taskParmPtr )
+void playMarioSound( void* taskParmPtr )//toca canción de mario
 {
 
-    TickType_t periodo =  1/ portTICK_RATE_MS;		// Tarea periodica cada 1000 ms
+    TickType_t periodo =  1/ portTICK_RATE_MS;		// Tarea periodica cada 1 ms
 
-    //TickType_t xLastWakeTime = xTaskGetTickCount();
+
     static uint16_t contadorMilisegundos=0;
     static uint16_t indice;
     static bool_t variante=TRUE;
@@ -127,7 +126,7 @@ void playMarioSound( void* taskParmPtr )
     {
 
     xSemaphoreTake(SEMTONEMARIO,portMAX_DELAY);
-    //pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
+
 
 		while(TRUE)
 		{
@@ -169,12 +168,12 @@ void playMarioSound( void* taskParmPtr )
 
 }
 
-void playMemeSound( void* taskParmPtr )
+void playMemeSound( void* taskParmPtr )//toca canción meme
 {
 
-    //TickType_t periodo =  1/ portTICK_RATE_MS;		// Tarea periodica cada 1000 ms
 
-    //TickType_t xLastWakeTime = xTaskGetTickCount();
+
+
     static uint16_t contadorMilisegundos=0;
     static uint16_t indice;
     static bool_t variante=TRUE;
@@ -190,7 +189,7 @@ void playMemeSound( void* taskParmPtr )
     {
 
     xSemaphoreTake(SEMTONEMEME,portMAX_DELAY);
-    //pwmConfig( PWM6, PWM_ENABLE_OUTPUT );
+
 
 		while(TRUE)
 		{
@@ -232,7 +231,7 @@ void playMemeSound( void* taskParmPtr )
 
 }
 
-void cortinaOpen( void* taskParmPtr )
+void cortinaOpen( void* taskParmPtr )//abre cortina
 {
 
 
@@ -243,7 +242,7 @@ void cortinaOpen( void* taskParmPtr )
     	gpioWrite( LED1, ON );
     }
 }
-void cortinaClose( void* taskParmPtr )
+void cortinaClose( void* taskParmPtr )//cierra cortina
 {
 
 
@@ -255,7 +254,7 @@ void cortinaClose( void* taskParmPtr )
     }
 }
 
-void alarma( void* taskParmPtr )
+void alarma( void* taskParmPtr )//dispara alarma
 {
 
 	 TickType_t periodo =  30000 / portTICK_RATE_MS;	//cada 30 segundos

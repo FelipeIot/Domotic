@@ -32,20 +32,20 @@
 // Task implementation
 void rtc_config(void)
 {
-	rtcInit();
+	rtcInit();//configuración inicial rtc
 }
 
 void rct_leer(rtclock_t *real)
 {
 	rtc_t rtc;
 	rtcRead( &rtc );
-	real->hour=rtc.hour;
-	real->mday=rtc.mday;
-	real->min=rtc.min;
-	real->month=rtc.month;
-	real->sec=rtc.sec;
-	real->wday=rtc.wday;
-	real->year=rtc.year;
+	real->hour=rtc.hour; //hora del rtc
+	real->mday=rtc.mday;//dia del rtc
+	real->min=rtc.min;//minuto del rtc
+	real->month=rtc.month;//mes del rtc
+	real->sec=rtc.sec;//segundo del rtc
+	real->wday=rtc.wday;//dia de la semana del rtc
+	real->year=rtc.year;//año del rtc
 
 }
 

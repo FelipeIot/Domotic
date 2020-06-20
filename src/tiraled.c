@@ -21,9 +21,9 @@
 /*=====[Definitions of private data types]===================================*/
 
 /*=====[Definitions of external public global variables]=====================*/
-uint8_t redcorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};
-uint8_t greencorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};
-uint8_t bluecorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};
+uint8_t redcorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};//niveles de iluminación rojo
+uint8_t greencorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};//niveles de iluminación verde
+uint8_t bluecorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};//niveles de iluminación azul
 /*=====[Definitions of public global variables]==============================*/
 
 /*=====[Definitions of private global variables]=============================*/
@@ -32,7 +32,7 @@ uint8_t bluecorrection[8]={0,  5,  21,  47,  83,  130,  187,  255};
 
 /*=====[Implementations of public functions]=================================*/
 
-void tiraled_init(void)
+void tiraled_init(void)//configuración inicial de las tiras led
 {
 	   bool_t valor = 0;
 	   valor = pwmConfig( 0, PWM_ENABLE );

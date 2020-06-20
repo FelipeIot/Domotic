@@ -168,21 +168,21 @@ int main( void )
 
 
 
-	   SEM1=xSemaphoreCreateBinary();
+	   SEM1=xSemaphoreCreateBinary();//creación semáforo para encender foco
 
-	   SEM2=xSemaphoreCreateBinary();
+	   SEM2=xSemaphoreCreateBinary();//creación semáforo para apagar foco
 
-	   SEMTONEMARIO=xSemaphoreCreateBinary();
+	   SEMTONEMARIO=xSemaphoreCreateBinary();//creación semáforo tocar melodía de mario
 
-	   SEMTONEMEME=xSemaphoreCreateBinary();
+	   SEMTONEMEME=xSemaphoreCreateBinary();//creación semáforo tocar melodía meme
 
-	   SEMLED=xSemaphoreCreateBinary();
+	   SEMLED=xSemaphoreCreateBinary();//creación semáforo tira led
 
-	   SEMCORTINAOPEN=xSemaphoreCreateBinary();
+	   SEMCORTINAOPEN=xSemaphoreCreateBinary();//creación semáforo abrir cortina
 
-	   SEMCORTINACLOSE=xSemaphoreCreateBinary();
+	   SEMCORTINACLOSE=xSemaphoreCreateBinary();//creación semáforo cerrar cortina
 
-	   SEMDESPERTADOR=xSemaphoreCreateBinary();
+	   SEMDESPERTADOR=xSemaphoreCreateBinary();//creación semáforo para activar alarma
 
 	   boardInit();
 
@@ -278,6 +278,8 @@ int main( void )
 			   0                           // Pointer to the task created in the system
 	   );
 
+
+	//Chequeo de errores de creación de tareas
    if(tarea1 == pdFAIL)
    {
 	   printf("No se creo la tarea1");
@@ -344,11 +346,11 @@ int main( void )
    }
    if(tarea9 == pdFAIL)
    {
-	   printf("No se creo la tarea8");
+	   printf("No se creo la tarea9");
    }
    else
    {
-	   printf(" Creo la tarea8");
+	   printf(" Creo la tarea9");
    }
 
 

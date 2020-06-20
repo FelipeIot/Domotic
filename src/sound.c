@@ -22,6 +22,8 @@
 /*=====[Definitions of external public global variables]=====================*/
 
 /*=====[Definitions of public global variables]==============================*/
+
+////////FRECUENCIAS/////////////////////////////////////////////////////////////////////////////////
 uint32_t melody[78] = {NOTE_E7, NOTE_E7, 0, NOTE_E7,0, NOTE_C7, NOTE_E7, 0,NOTE_G7, 0, 0,  0,NOTE_G6, 0, 0, 0,NOTE_C7, 0, 0, NOTE_G6,0, 0, NOTE_E6, 0,0, NOTE_A6, 0, NOTE_B6,0, NOTE_AS6, NOTE_A6, 0,NOTE_G6, NOTE_E7, NOTE_G7,NOTE_A7, 0, NOTE_F7, NOTE_G7,0, NOTE_E7, 0, NOTE_C7,NOTE_D7, NOTE_B6, 0, 0,NOTE_C7, 0, 0, NOTE_G6,0, 0, NOTE_E6, 0,0, NOTE_A6, 0, NOTE_B6,0, NOTE_AS6, NOTE_A6, 0,NOTE_G6, NOTE_E7, NOTE_G7,NOTE_A7, 0, NOTE_F7, NOTE_G7,0, NOTE_E7, 0, NOTE_C7,NOTE_D7, NOTE_B6, 0, 0};
 uint16_t tempo[78] = {12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 9, 9, 9, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 9, 9, 9, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,};
 
@@ -68,7 +70,7 @@ uint32_t melodyMeme[136] = {
   NOTE_G4,0, NOTE_G4, NOTE_AS5,
   NOTE_A5, NOTE_AS5, NOTE_A5, NOTE_AS5
  };
-
+/////////////////////////////////TIEMPOS/////////////////////////////////////////////////////////
 uint16_t tempoMeme[136] = {
   4,4,4,4,
   4,4,4,4,
@@ -123,7 +125,7 @@ uint16_t milisMeme[272];
 
 /*=====[Implementations of public functions]=================================*/
 
-// Task implementation
+//Arma la melodía para facilitar la implementación del RTOS
 void procesartabla(uint32_t *mel,uint16_t *tem,uint32_t *melsal,uint16_t *temsal,uint16_t longitud,uint16_t velocidad)
 {
 	static uint16_t i;
